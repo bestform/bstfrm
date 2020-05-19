@@ -15,7 +15,8 @@ Welcome to bstfrm.
 # print "foo" "bar";
 foobar
 ok
-# 
-
+# set #foo="World!"; print "Hello " #foo;
+Hello World!
+ok
 
 ```

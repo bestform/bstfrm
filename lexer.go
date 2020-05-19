@@ -10,6 +10,7 @@ type symbol byte
 
 const (
 	symbolSemicolon symbol = ';'
+	symbolEqual symbol = '='
 )
 
 type keyword string
@@ -17,6 +18,7 @@ type keyword string
 const (
 	keywordPrint keyword = "print"
 	keywordCalc keyword = "calc"
+	keywordSet keyword = "set"
 )
 
 type tokenKind uint
@@ -26,6 +28,7 @@ const (
 	symbolKind
 	keywordKind
 	numericKind
+	identifierKind
 )
 
 type token struct {
@@ -52,7 +55,7 @@ type lexer func(source string, cur cursor) (*token, cursor, bool)
 func Lex(source string) ([]*token, error) {
 	var cur cursor
 
-	lexers := []lexer{symbolLexer, keywordLexer, stringLexer, numericLexer}
+	lexers := []lexer{symbolLexer, keywordLexer, stringLexer, numericLexer, identifierLexer}
 	var tokens []*token
 
 lex:
@@ -91,7 +94,7 @@ func symbolLexer(source string, ic cursor) (*token, cursor, bool) {
 
 	current := source[cur.pointer]
 
-	for _, s := range []symbol{symbolSemicolon} {
+	for _, s := range []symbol{symbolSemicolon, symbolEqual} {
 		if current == byte(s) {
 			cur.pointer++
 			cur.pos.col++
@@ -106,7 +109,7 @@ func symbolLexer(source string, ic cursor) (*token, cursor, bool) {
 }
 
 func keywordLexer(source string, ic cursor) (*token, cursor, bool) {
-	keywords := []keyword{keywordPrint, keywordCalc}
+	keywords := []keyword{keywordPrint, keywordCalc, keywordSet}
 	cur := ic
 
 	sort.Slice(keywords, func(a int, b int) bool {
@@ -173,5 +176,35 @@ func numericLexer(source string, ic cursor) (*token, cursor, bool) {
 		kind:  numericKind,
 		value: string(value),
 	}, cur, true
+}
+
+func identifierLexer(source string, ic cursor) (*token, cursor, bool) {
+	cur := ic
+
+	if source[cur.pointer] != '#' {
+		return nil, ic, false
+	}
+	cur.pointer++
+	cur.pos.col++
+
+	var value []byte
+	for cur.pointer < uint(len(source)) && isAlphanumeric(source[cur.pointer]) {
+		value = append(value, source[cur.pointer])
+		cur.pointer++
+		cur.pos.col++
+	}
+
+	if len(value) == 0 {
+		return nil, ic, false
+	}
+
+	return &token{
+		kind:  identifierKind,
+		value: string(value),
+	}, cur, true
+}
+
+func isAlphanumeric(c byte) bool {
+	return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
 }
 
