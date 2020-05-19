@@ -3,16 +3,15 @@ package bstfrm
 import "fmt"
 
 type Machine struct {
-	ast *Ast
 	variables map[string]string
 }
 
-func NewMachine(ast *Ast) *Machine {
-	return &Machine{ast: ast, variables: make(map[string]string)}
+func NewMachine() *Machine {
+	return &Machine{variables: make(map[string]string)}
 }
 
-func (m *Machine) Run() {
-	for _, stmt := range *m.ast.Statements {
+func (m *Machine) Run(ast *Ast) {
+	for _, stmt := range *ast.Statements {
 		switch stmt.Kind {
 		case PrintKind:
 			m.print(stmt)

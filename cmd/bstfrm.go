@@ -13,6 +13,7 @@ func main() {
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Println("Welcome to bstfrm.")
 
+	m := bstfrm.NewMachine()
 	for {
 		fmt.Print("# ")
 		text, _ := reader.ReadString('\n')
@@ -24,8 +25,8 @@ func main() {
 			continue
 		}
 
-		m := bstfrm.NewMachine(ast)
-		m.Run()
+
+		m.Run(ast)
 		fmt.Println()
 		fmt.Println("ok")
 	}

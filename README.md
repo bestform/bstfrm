@@ -10,13 +10,14 @@ Try it out:
 `go run cmd/bstfrm.go`
 
 ```
-
 Welcome to bstfrm.
-# print "foo" "bar";
-foobar
+# set #foo="World!";
+
 ok
-# set #foo="World!"; print "Hello " #foo;
+# print "Hello " #foo;
 Hello World!
 ok
+# 
+
 
 ```
