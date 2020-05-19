@@ -11,13 +11,16 @@ Try it out:
 
 ```
 Welcome to bstfrm.
-# set #foo="World!";
+> set #foo="World!";
 
 ok
-# print "Hello " #foo;
+> print "Hello " #foo;
 Hello World!
 ok
-# 
+> calc (1+2)*3;
+9
 
+ok
+> 
 
 ```

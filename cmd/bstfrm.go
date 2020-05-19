@@ -15,7 +15,7 @@ func main() {
 
 	m := bstfrm.NewMachine()
 	for {
-		fmt.Print("# ")
+		fmt.Print("> ")
 		text, _ := reader.ReadString('\n')
 		text = strings.Replace(text, "\n", "", -1)
 

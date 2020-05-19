@@ -17,6 +17,14 @@ func (m *Machine) Run(ast *Ast) {
 			m.print(stmt)
 		case SetKind:
 			m.set(stmt.SetStatement.Name, stmt.SetStatement.Value)
+		case CalcKind:
+			result, err := stmt.CalcStatement.Expression.Calc()
+			if err != nil {
+				fmt.Println(err)
+			} else {
+				//fmt.Println(stmt.CalcStatement)
+				fmt.Println(result)
+			}
 		}
 	}
 }

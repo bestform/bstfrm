@@ -9,16 +9,22 @@ import (
 type symbol byte
 
 const (
-	symbolSemicolon symbol = ';'
-	symbolEqual symbol = '='
+	symbolSemicolon  symbol = ';'
+	symbolEqual      symbol = '='
+	symbolLeftParen  symbol = '('
+	symbolRightParen symbol = ')'
+	symbolPlus       symbol = '+'
+	symbolMinus      symbol = '-'
+	symbolTimes      symbol = '*'
+	symbolDivide     symbol = '/'
 )
 
 type keyword string
 
 const (
 	keywordPrint keyword = "print"
-	keywordCalc keyword = "calc"
-	keywordSet keyword = "set"
+	keywordCalc  keyword = "calc"
+	keywordSet   keyword = "set"
 )
 
 type tokenKind uint
@@ -94,12 +100,20 @@ func symbolLexer(source string, ic cursor) (*token, cursor, bool) {
 
 	current := source[cur.pointer]
 
-	for _, s := range []symbol{symbolSemicolon, symbolEqual} {
+	for _, s := range []symbol{
+		symbolSemicolon,
+		symbolEqual,
+		symbolPlus,
+		symbolMinus,
+		symbolTimes,
+		symbolDivide,
+		symbolLeftParen,
+		symbolRightParen} {
 		if current == byte(s) {
 			cur.pointer++
 			cur.pos.col++
 			return &token{
-				kind: symbolKind,
+				kind:  symbolKind,
 				value: string(current),
 			}, cur, true
 		}
@@ -162,7 +176,7 @@ func numericLexer(source string, ic cursor) (*token, cursor, bool) {
 
 	var value []byte
 
-	for uint(len(source)) > cur.pointer &&  source[cur.pointer] >= '0' && source[cur.pointer] <= '9' {
+	for uint(len(source)) > cur.pointer && source[cur.pointer] >= '0' && source[cur.pointer] <= '9' {
 		value = append(value, source[cur.pointer])
 		cur.pointer++
 		cur.pos.col++
@@ -207,4 +221,3 @@ func identifierLexer(source string, ic cursor) (*token, cursor, bool) {
 func isAlphanumeric(c byte) bool {
 	return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
 }
-
